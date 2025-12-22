@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Landing Page -->
+    <section id="landing-page" class="landing-page active">
+        <div class="landing-content">
+            <h1>Welcome to <span class="highlight">RestoSys</span></h1>
+            <p>The premium solution for restaurant management.</p>
+            <button class="btn-primary btn-lg" onclick="enterDashboard()">Get Started <i
+                    class="fa-solid fa-arrow-right"></i></button>
+        </div>
+        <div class="landing-bg"></div>
+    </section>
+
+    <!-- Sidebar Navigation (Initially Hidden) -->
+    <nav class="sidebar hidden" id="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-utensils"></i>
+            <h2>RestoSys</h2>
+        </div>
+        <ul class="nav-links">
+            <li class="active" onclick="showSection('dashboard')"><i class="fa-solid fa-chart-pie"></i> Dashboard</li>
+            <li onclick="showSection('customers')"><i class="fa-solid fa-users"></i> Customers</li>
+            <li onclick="showSection('restaurants')"><i class="fa-solid fa-store"></i> Restaurants</li>
+            <li onclick="showSection('orders')"><i class="fa-solid fa-receipt"></i> Orders</li>
+        </ul>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content hidden" id="main-content">
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="content-section active">
+            <header>
+                <div>
+                    <h1>Dashboard</h1>
+                    <p>Overview of your system performance.</p>
+                </div>
+                <div style="display:flex; gap:0.5rem;">
+                    <button class="btn-secondary" onclick="window.open('http://localhost:3000/api/export/json')"><i
+                            class="fa-solid fa-file-code"></i> JSON</button>
+                    <button class="btn-secondary" onclick="window.open('http://localhost:3000/api/export/csv')"><i
+                            class="fa-solid fa-file-csv"></i> CSV</button>
+                </div>
+            </header>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="icon-box blue"><i class="fa-solid fa-users"></i></div>
+                    <div>
+                        <h3>Total Customers</h3>
+                        <p id="total-customers">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon-box purple"><i class="fa-solid fa-store"></i></div>
+                    <div>
+                        <h3>Restaurants</h3>
+                        <p id="total-restaurants">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon-box green"><i class="fa-solid fa-receipt"></i></div>
+                    <div>
+                        <h3>Active Orders</h3>
+                        <p id="total-orders">0</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Recent Activity or Charts could go here -->
+        </section>
+
+        <!-- Customers Section -->
+        <section id="customers" class="content-section">
+            <header>
+                <h1>Customers</h1>
+                <button class="btn-primary" onclick="openModal('customer-modal')"><i class="fa-solid fa-plus"></i> Add
+                    Customer</button>
+            </header>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Area ID</th>
+                            <th>Premium</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customer-list"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Restaurants Section -->
+        <section id="restaurants" class="content-section">
+            <header>
+                <h1>Restaurants</h1>
+            </header>
+            <div class="grid-container" id="restaurant-list"></div>
+
+            <!-- Menu View -->
+            <div id="menu-view" class="hidden">
+                <header>
+                    <button class="btn-secondary" onclick="hideMenu()"><i class="fa-solid fa-arrow-left"></i>
+                        Back</button>
+                    <h2 id="menu-title">Menu</h2>
+                </header>
+
+                <div class="menu-layout">
+                    <div class="menu-items table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="menu-list"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="cart-panel">
+                        <h3>Current Order</h3>
+                        <div class="cart-items-list" id="cart-items">
+                            <p class="empty-cart">No items selected</p>
+                        </div>
+                        <div class="cart-footer">
+                            <div class="total-row">
+                                <span>Total:</span>
+                                <span id="cart-total">$0.00</span>
+                            </div>
+                            <button class="btn-primary full-width" onclick="placeOrder()">Place Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Orders Section -->
+        <section id="orders" class="content-section">
+            <header>
+                <h1>Orders</h1>
+            </header>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Customer</th>
+                            <th>Restaurant</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="order-list"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Modals -->
+    <div id="customer-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('customer-modal')">&times;</span>
+            <h2>Add New Customer</h2>
+            <form id="add-customer-form">
+                <input type="text" id="cust-name" placeholder="Name" required>
+                <input type="text" id="cust-phone" placeholder="Phone" required>
+                <input type="email" id="cust-email" placeholder="Email">
+                <input type="text" id="cust-address" placeholder="Address">
+                <select id="cust-area" required
+                    style="width:100%; background:rgba(0,0,0,0.3); border:1px solid var(--border); padding:1rem; border-radius:0.5rem; color:white; margin-bottom:1rem;">
+                    <option value="" disabled selected>Select Area</option>
+                    <!-- Populated by JS -->
+                </select>
+                <button type="submit" class="btn-primary">Save Customer</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
