@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RestoSys - Customers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <main class="main-content">
+        <section id="customers" class="content-section active">
+            <header>
+                <h1>Customers</h1>
+                <div style="display:flex; gap:1rem;">
+                    <input type="text" id="cust-search" placeholder="Search customer..." oninput="searchCustomers()"
+                        style="padding:0.5rem 1rem; border-radius:2rem; border:1px solid var(--border); background:rgba(255,255,255,0.05); color:white;">
+                    <button class="btn-primary" onclick="openModal('customer-modal')"><i class="fa-solid fa-plus"></i>
+                        Add Customer</button>
+                </div>
+            </header>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Area ID</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customer-list"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <div id="customer-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('customer-modal')">&times;</span>
+            <h2 id="modal-title">Add New Customer</h2>
+            <form id="add-customer-form">
+                <input type="hidden" id="cust-id">
+                <input type="text" id="cust-name" placeholder="Name" required>
+                <input type="text" id="cust-phone" placeholder="Phone" required maxlength="15">
+                <input type="email" id="cust-email" placeholder="Email">
+                <input type="text" id="cust-address" placeholder="Address">
+                <select id="cust-area" required
+                    style="width:100%; background:rgba(0,0,0,0.3); border:1px solid var(--border); padding:1rem; border-radius:0.5rem; color:white; margin-bottom:1rem;">
+                    <option value="" disabled selected>Select Area</option>
+                </select>
+                <button type="submit" class="btn-primary" id="save-cust-btn">Save Customer</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order History Modal -->
+    <div id="history-modal" class="modal">
+        <div class="modal-content" style="max-width:600px;">
+            <span class="close" onclick="closeModal('history-modal')">&times;</span>
+            <h2>Order History</h2>
+            <div class="table-container" style="max-height:400px; overflow-y:auto;">
+                <table style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Restaurant</th>
+                            <th>Date</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-list"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+    <script src="app.js"></script>
+</body>
+
+</html>
