@@ -430,6 +430,53 @@ async function placeOrder() {
 }
 
 
+// --- Orders ---
+
+async function loadOrders() {
+    try {
+        const res = await fetch(`${API_URL}/orders`);
+        const orders = await res.json();
+        const tbody = document.getElementById('order-list');
+        tbody.innerHTML = '';
+
+        if (orders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-secondary);">No orders found</td></tr>';
+            return;
+        }
+
+        orders.forEach(o => {
+            const statusColor = {
+                'Pending': 'orange',
+                'In Progress': 'var(--accent)',
+                'Completed': 'var(--success)',
+                'Cancelled': 'var(--danger)'
+            }[o.status] || 'var(--text-secondary)';
+
+            tbody.innerHTML += `
+                <tr>
+                    <td>#${o.order_id}</td>
+                    <td style="font-weight:600">${o.customer_name}</td>
+                    <td>${o.restaurant_name}</td>
+                    <td>${new Date(o.order_date).toLocaleDateString()}</td>
+                    <td>
+                        <select onchange="updateOrderStatus(${o.order_id}, this.value)" style="background:rgba(255,255,255,0.1); border:1px solid var(--border); color:white; padding:0.3rem 0.5rem; border-radius:0.5rem; cursor:pointer;">
+                            <option value="Pending" ${o.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="In Progress" ${o.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                            <option value="Completed" ${o.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                            <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                        </select>
+                    </td>
+                    <td style="font-weight:600; color:var(--success);">$${o.total}</td>
+                </tr>
+            `;
+        });
+    } catch (err) {
+        console.error(err);
+        showToast('Error loading orders', 'error');
+    }
+}
+
+
 // --- Delivery ---
 
 async function loadDelivery() {
@@ -666,3 +713,4 @@ window.toggleAvailability = toggleAvailability;
 window.openModal = openModal;
 window.closeModal = closeModal;
 window.updateOrderStatus = updateOrderStatus;
+window.loadOrders = loadOrders;
